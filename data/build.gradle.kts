@@ -1,3 +1,5 @@
+import org.gradle.initialization.Environment.Properties
+
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
@@ -7,11 +9,16 @@ android {
     namespace = "com.ho8278.data"
     compileSdk = 33
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     defaultConfig {
         minSdk = 24
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+        buildConfigField("String", "API_KEY", "\"${System.getenv("API_KEY")}\"")
     }
 
     buildTypes {
