@@ -50,4 +50,16 @@ class DiskPreference(
             }
         }
     }
+
+    override suspend fun removeValue(domainName: String, key: String) {
+        val sharedPreferences = getPreference(domainName)
+
+        sharedPreferences.edit { remove(key) }
+    }
+
+    override suspend fun clear(domainName: String) {
+        val sharedPreference = getPreference(domainName)
+
+        sharedPreference.edit { clear() }
+    }
 }

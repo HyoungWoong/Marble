@@ -5,4 +5,6 @@ import java.lang.reflect.Type
 interface DomainPreference {
     suspend fun <T> getValue(domainName: String, key: String, type: Type): T?
     suspend fun <T> putValue(domainName: String, key: String, value: T, type: Type)
+    suspend fun removeValue(domainName: String, key: String)
+    suspend fun clear(domainName: String)
 }
