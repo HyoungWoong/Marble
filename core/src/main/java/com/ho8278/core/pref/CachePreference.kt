@@ -4,8 +4,8 @@ import android.util.LruCache
 import java.lang.reflect.Type
 
 class CachePreference(
-    private val delegate: DomainPreference
-) : DomainPreference {
+    private val delegate: Preference
+) : Preference {
 
     private val valueCache = LruCache<String, Any>(CACHE_SIZE)
 
