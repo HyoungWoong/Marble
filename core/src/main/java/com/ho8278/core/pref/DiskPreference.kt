@@ -9,7 +9,7 @@ import java.lang.reflect.Type
 class DiskPreference(
     private val context: Context,
     private val serializer: Serializer,
-) : DomainPreference {
+) : Preference {
 
     private val preferenceCache = mutableMapOf<String, SharedPreferences>()
 
