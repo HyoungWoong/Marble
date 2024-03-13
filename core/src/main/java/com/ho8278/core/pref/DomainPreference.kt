@@ -2,7 +2,7 @@ package com.ho8278.core.pref
 
 import java.lang.reflect.Type
 
-class DomainPreference(
+open class DomainPreference(
     private val preference: Preference,
     private val domain: String
 ) {
