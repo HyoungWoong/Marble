@@ -22,7 +22,7 @@ class DiskPreference(
     }
 
     @Suppress("IMPLICIT_CAST_TO_ANY", "UNCHECKED_CAST")
-    override suspend fun <T> getValue(domainName: String, key: String, type: Type): T? {
+    override suspend fun <T : Any> getValue(domainName: String, key: String, type: Type): T? {
         val sharedPreference = getPreference(domainName)
 
         return when (type) {
@@ -34,10 +34,10 @@ class DiskPreference(
                 val valueString = sharedPreference.getString(key, null)
                 valueString?.let { serializer.deserialize<T>(valueString, type) }
             }
-        } as T?
+        } as? T
     }
 
-    override suspend fun <T> putValue(domainName: String, key: String, value: T, type: Type) {
+    override suspend fun <T : Any> putValue(domainName: String, key: String, value: T, type: Type) {
         val sharedPreference = getPreference(domainName)
         when (type) {
             Int::class.java -> sharedPreference.edit { putInt(key, value as Int) }
