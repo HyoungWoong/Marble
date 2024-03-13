@@ -1,4 +1,4 @@
-import org.gradle.initialization.Environment.Properties
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
 plugins {
     id("com.android.library")
@@ -22,7 +22,11 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
-        buildConfigField("String", "API_KEY", "\"${System.getenv("API_KEY")}\"")
+
+        val key = gradleLocalProperties(rootDir).getProperty("API_KEY")
+        val privateKey = gradleLocalProperties(rootDir).getProperty("PRIVATE_KEY")
+        buildConfigField("String", "API_KEY", key)
+        buildConfigField("String", "PRIVATE_KEY", privateKey)
     }
 
     buildTypes {
