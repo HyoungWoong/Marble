@@ -16,7 +16,7 @@ class MarbleRepositoryImpl(
     private val favoritePref: FavoritePref,
 ) : MarbleRepository {
 
-    private val favoriteChangesEvent = MutableSharedFlow<String>()
+    private val favoriteChangesEvent = MutableSharedFlow<List<String>>()
 
     override suspend fun search(nameStartsWith: String, offset: Int): SearchResult {
         val timestamp = System.currentTimeMillis()
@@ -46,10 +46,10 @@ class MarbleRepositoryImpl(
         val newFavorites = Favorites(favoriteIds.toList())
 
         favoritePref.putValue(KEY_FAVORITE, newFavorites, Favorites::class.java)
-        favoriteChangesEvent.emit(id)
+        favoriteChangesEvent.emit(newFavorites.ids)
     }
 
-    override fun favoriteChanges(): Flow<String> = favoriteChangesEvent
+    override fun favoriteChanges(): Flow<List<String>> = favoriteChangesEvent
 
     private fun getHash(timestamp: Long): String {
         val digestInput = "$timestamp${BuildConfig.PRIVATE_KEY}${BuildConfig.API_KEY}"

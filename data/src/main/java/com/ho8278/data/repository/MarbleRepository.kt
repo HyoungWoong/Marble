@@ -7,5 +7,5 @@ interface MarbleRepository {
     suspend fun search(nameStartsWith: String, offset: Int): SearchResult
     suspend fun getFavorites(): List<String>
     suspend fun setFavorite(id: String)
-    fun favoriteChanges(): Flow<String>
+    fun favoriteChanges(): Flow<List<String>>
 }
