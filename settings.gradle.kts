@@ -16,3 +16,4 @@ dependencyResolutionManagement {
 rootProject.name = "Marble"
 include(":app")
 include(":core")
+include(":data")

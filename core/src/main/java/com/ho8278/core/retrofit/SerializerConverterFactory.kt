@@ -12,8 +12,8 @@ class SerializerConverterFactory(private val serializer: Serializer): Converter.
         type: Type,
         annotations: Array<out Annotation>,
         retrofit: Retrofit
-    ): Converter<ResponseBody, *>? {
-        return super.responseBodyConverter(type, annotations, retrofit)
+    ): Converter<ResponseBody, *> {
+        return SerializerResponseBodyConverter<Type>(serializer, type)
     }
 
     override fun requestBodyConverter(
@@ -21,7 +21,7 @@ class SerializerConverterFactory(private val serializer: Serializer): Converter.
         parameterAnnotations: Array<out Annotation>,
         methodAnnotations: Array<out Annotation>,
         retrofit: Retrofit
-    ): Converter<*, RequestBody>? {
-        return super.requestBodyConverter(type, parameterAnnotations, methodAnnotations, retrofit)
+    ): Converter<*, RequestBody> {
+        return SerializerRequestBodyConverter<Type>(serializer, type)
     }
 }
