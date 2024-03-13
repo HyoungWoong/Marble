@@ -1,8 +1,8 @@
 package com.ho8278.data.remote.model
 
-import kotlinx.serialization.Serializable
+import com.squareup.moshi.JsonClass
 
-@Serializable
+@JsonClass(generateAdapter = true)
 data class CharacterDataContainer(
     val offset: Int = 0,
     val limit: Int = 0,
