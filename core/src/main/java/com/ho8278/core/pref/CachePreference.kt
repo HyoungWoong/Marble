@@ -10,12 +10,12 @@ class CachePreference(
     private val valueCache = LruCache<String, Any>(CACHE_SIZE)
 
     @Suppress("UNCHECKED_CAST")
-    override suspend fun <T> getValue(domainName: String, key: String, type: Type): T? {
+    override suspend fun <T : Any> getValue(domainName: String, key: String, type: Type): T? {
         return valueCache[getCacheKey(domainName, key)] as? T
             ?: delegate.getValue(domainName, key, type)
     }
 
-    override suspend fun <T> putValue(domainName: String, key: String, value: T, type: Type) {
+    override suspend fun <T : Any> putValue(domainName: String, key: String, value: T, type: Type) {
         valueCache.put(getCacheKey(domainName, key), value)
         delegate.putValue(domainName, key, value, type)
     }
