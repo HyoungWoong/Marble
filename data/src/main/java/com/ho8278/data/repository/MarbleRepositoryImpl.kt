@@ -49,6 +49,14 @@ class MarbleRepositoryImpl(
         favoriteChangesEvent.emit(newFavorites.ids)
     }
 
+    override suspend fun removeFavorite(id: String) {
+        val favoriteIds = getFavorites() - id
+        val newFavorites = Favorites(favoriteIds)
+
+        favoritePref.putValue(KEY_FAVORITE, newFavorites, Favorites::class.java)
+        favoriteChangesEvent.emit(newFavorites.ids)
+    }
+
     override fun favoriteChanges(): Flow<List<String>> = favoriteChangesEvent
 
     private fun getHash(timestamp: Long): String {
