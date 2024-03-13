@@ -7,3 +7,5 @@ data class Image(
     val path: String?,
     val extension: String?,
 )
+
+fun Image.toUrl() = "${path.orEmpty()}${extension.orEmpty()}"
