@@ -11,7 +11,7 @@ plugins {
 
 android {
     namespace = "com.ho8278.data"
-    compileSdk = 33
+    compileSdk = 34
 
     buildFeatures {
         buildConfig = true
