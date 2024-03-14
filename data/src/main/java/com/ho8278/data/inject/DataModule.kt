@@ -41,7 +41,7 @@ class DataModule {
 
     @Provides
     @Singleton
-    fun provideRepository(
+    fun provideMarbleRepository(
         marbleService: MarbleService,
         favoritePref: FavoritePref
     ): MarbleRepository {
@@ -50,7 +50,7 @@ class DataModule {
 
     @Provides
     @Singleton
-    fun provideRepository(
+    fun provideTabRepository(
         favoritePref: FavoritePref
     ): TabRepository {
         return TabRepositoryImpl(favoritePref)
