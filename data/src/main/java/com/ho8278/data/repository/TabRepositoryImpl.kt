@@ -22,7 +22,7 @@ class TabRepositoryImpl @Inject constructor(
     }
 
     override fun tabChanges(): Flow<Int> {
-        return tabChangeEvent.onStart { getTabPosition() }
+        return tabChangeEvent.onStart { emit(getTabPosition()) }
     }
 
     companion object {
