@@ -14,6 +14,7 @@ class TabRepositoryImpl @Inject constructor(
 
     override suspend fun setTabPosition(position: Int) {
         favoritePref.putValue(KEY_POSITION, position, Int::class.java)
+        tabChangeEvent.emit(position)
     }
 
     override suspend fun getTabPosition(): Int {
