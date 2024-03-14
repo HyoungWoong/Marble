@@ -20,7 +20,7 @@ class TabRepositoryImpl @Inject constructor(
         return favoritePref.getValue(KEY_POSITION, Int::class.java) ?: 0
     }
 
-    override suspend fun tabChanges(): Flow<Int> {
+    override fun tabChanges(): Flow<Int> {
         return tabChangeEvent.onStart { getTabPosition() }
     }
 
