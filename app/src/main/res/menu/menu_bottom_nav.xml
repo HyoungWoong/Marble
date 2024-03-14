@@ -9,6 +9,5 @@
         android:id="@+id/menu_favorite"
         android:enabled="true"
         android:icon="@drawable/baseline_favorite_24"
-        android:iconTint="@color/search_icon_tint"
         android:title="@string/fragment_favorite" />
 </menu>

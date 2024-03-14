@@ -9,6 +9,10 @@ android {
     namespace = "com.ho8278.marble"
     compileSdk = 34
 
+    buildFeatures {
+        viewBinding = true
+    }
+
     defaultConfig {
         applicationId = "com.ho8278.marble"
         minSdk = 24
@@ -43,6 +47,8 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
     implementation("com.squareup.moshi:moshi:1.15.0")
+    implementation("androidx.activity:activity-ktx:1.8.2")
+    implementation("androidx.fragment:fragment-ktx:1.6.2")
 
     implementation("com.google.dagger:hilt-android:2.51")
     kapt("com.google.dagger:hilt-android-compiler:2.51")
