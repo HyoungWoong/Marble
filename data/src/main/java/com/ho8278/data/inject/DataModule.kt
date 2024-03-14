@@ -10,6 +10,8 @@ import com.ho8278.data.local.FavoritePref
 import com.ho8278.data.remote.service.MarbleService
 import com.ho8278.data.repository.MarbleRepository
 import com.ho8278.data.repository.MarbleRepositoryImpl
+import com.ho8278.data.repository.TabRepository
+import com.ho8278.data.repository.TabRepositoryImpl
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
@@ -39,10 +41,18 @@ class DataModule {
 
     @Provides
     @Singleton
-    fun provideRepository(
+    fun provideMarbleRepository(
         marbleService: MarbleService,
         favoritePref: FavoritePref
     ): MarbleRepository {
         return MarbleRepositoryImpl(marbleService, favoritePref)
+    }
+
+    @Provides
+    @Singleton
+    fun provideTabRepository(
+        favoritePref: FavoritePref
+    ): TabRepository {
+        return TabRepositoryImpl(favoritePref)
     }
 }

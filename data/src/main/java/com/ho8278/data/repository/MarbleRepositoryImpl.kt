@@ -9,6 +9,7 @@ import com.ho8278.data.remote.model.toUrl
 import com.ho8278.data.remote.service.MarbleService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.onStart
 import java.security.MessageDigest
 
 class MarbleRepositoryImpl(
@@ -57,7 +58,9 @@ class MarbleRepositoryImpl(
         favoriteChangesEvent.emit(newFavorites.ids)
     }
 
-    override fun favoriteChanges(): Flow<List<String>> = favoriteChangesEvent
+    override fun favoriteChanges(): Flow<List<String>> {
+        return favoriteChangesEvent.onStart { emit(getFavorites()) }
+    }
 
     private fun getHash(timestamp: Long): String {
         val digestInput = "$timestamp${BuildConfig.PRIVATE_KEY}${BuildConfig.API_KEY}"
