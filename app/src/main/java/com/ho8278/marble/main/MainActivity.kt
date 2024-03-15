@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
                             show(fragment)
                         } else {
                             val fragment = if (position == 0) {
-                                SearchFragment.newInstance("", "")
+                                SearchFragment.newInstance()
                             } else {
                                 FavoriteFragment.newInstance("", "")
                             }
