@@ -14,6 +14,7 @@ fun <T> Flow<T>.stable(): Flow<T> {
                 throw cancellationException
             } catch (ignore: Throwable) {
                 delay(1000L)
+                ignore.printStackTrace()
             }
         }
     }

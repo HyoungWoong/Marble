@@ -4,6 +4,7 @@ import com.ho8278.core.pref.MemoryPreference
 import com.ho8278.core.retrofit.SerializerConverterFactory
 import com.ho8278.core.serialize.MoshiSerializer
 import com.ho8278.data.local.FavoritePref
+import com.ho8278.data.model.Card
 import com.ho8278.data.remote.NetworkConstant
 import com.ho8278.data.remote.service.MarbleService
 import com.ho8278.data.repository.MarbleRepository
@@ -53,29 +54,34 @@ class RepositoryTest {
 
     @Test
     fun `현재 저장된 favorite 을 저장하고 가져올 수 있다`(): Unit = runBlocking {
-        repository.setFavorite(1)
-        repository.setFavorite(3)
-        repository.setFavorite(5)
-        repository.setFavorite(6)
-        repository.setFavorite(6)
+        repository.setFavorite(Card(1,"","",""))
+        repository.setFavorite(Card(3,"","",""))
+        repository.setFavorite(Card(5,"","",""))
+        repository.setFavorite(Card(6,"","",""))
+        repository.setFavorite(Card(6,"","",""))
 
         val favoriteIds = repository.getFavorites()
 
-        assert(favoriteIds == listOf(1, 3, 5, 6))
+        assert(favoriteIds[0] == Card(1,"","",""))
+        assert(favoriteIds[1] == Card(3,"","",""))
+        assert(favoriteIds[2] == Card(5,"","",""))
+        assert(favoriteIds[3] == Card(6,"","",""))
     }
 
     @Test
     fun `현재 저장된 favorite 을 삭제할 수 있다`(): Unit = runBlocking {
-        repository.setFavorite(1)
-        repository.setFavorite(3)
-        repository.setFavorite(5)
-        repository.setFavorite(6)
-        repository.setFavorite(6)
+        repository.setFavorite(Card(1,"","",""))
+        repository.setFavorite(Card(3,"","",""))
+        repository.setFavorite(Card(5,"","",""))
+        repository.setFavorite(Card(6,"","",""))
+        repository.setFavorite(Card(6,"","",""))
 
         repository.removeFavorite(1)
 
         val favoriteIds = repository.getFavorites()
 
-        assert(favoriteIds == listOf(3, 5, 6))
+        assert(favoriteIds[0] == Card(3,"","",""))
+        assert(favoriteIds[1] == Card(5,"","",""))
+        assert(favoriteIds[2] == Card(6,"","",""))
     }
 }

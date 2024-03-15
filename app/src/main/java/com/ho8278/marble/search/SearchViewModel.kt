@@ -3,6 +3,7 @@ package com.ho8278.marble.search
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ho8278.core.error.stable
+import com.ho8278.data.model.Card
 import com.ho8278.data.model.SearchResult
 import com.ho8278.data.repository.MarbleRepository
 import com.ho8278.marble.common.ItemHolder
@@ -31,7 +32,7 @@ class SearchViewModel @Inject constructor(
         marbleRepository.favoriteChanges()
     ) { search, favorites ->
         search?.results?.map {
-            val isFavorite = favorites.contains(it.characterId)
+            val isFavorite = favorites.contains(it)
             ItemHolder(it, isFavorite)
         } ?: emptyList()
     }
@@ -87,16 +88,16 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    fun onCardClick(id: Int) {
+    fun onCardClick(card: Card) {
         viewModelScope.launch {
             val currentFavorite = withContext(Dispatchers.IO) {
                 marbleRepository.getFavorites()
             }
 
-            if (currentFavorite.contains(id)) {
-                marbleRepository.removeFavorite(id)
+            if (currentFavorite.contains(card)) {
+                marbleRepository.removeFavorite(card.characterId)
             } else {
-                marbleRepository.setFavorite(id)
+                marbleRepository.setFavorite(card)
             }
         }
     }
