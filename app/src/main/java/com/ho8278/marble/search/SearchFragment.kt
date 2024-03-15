@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
-import com.ho8278.core.flow.textChanges
+import com.ho8278.core.flowbinding.textChanges
 import com.ho8278.marble.databinding.FragmentSearchBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.debounce

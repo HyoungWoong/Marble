@@ -1,4 +1,4 @@
-package com.ho8278.core.flow
+package com.ho8278.core.flowbinding
 
 import android.text.Editable
 import android.text.TextWatcher
