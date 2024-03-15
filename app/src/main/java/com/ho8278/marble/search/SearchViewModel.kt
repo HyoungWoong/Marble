@@ -78,6 +78,12 @@ class SearchViewModel @Inject constructor(
         }
     }
 
+    fun onSelectCard(id: Int) {
+        viewModelScope.launch {
+            marbleRepository.setFavorite(id)
+        }
+    }
+
     companion object {
         private const val OFFSET_COUNT = 10
     }
