@@ -52,7 +52,6 @@ class MarbleRepositoryImpl(
         val adjustedIds: List<Card> = if (favoriteIds.size > MAX_FAVORITE_COUNT) {
             favoriteIds.toMutableList().apply {
                 removeFirst()
-                add(card)
             }
         } else {
             favoriteIds.toList()
