@@ -47,6 +47,7 @@ class SearchViewModel @Inject constructor(
             searchText
                 .mapLatest {
                     isLoadingLocal.emit(true)
+                    // FIXME: searchText 가 2글자 이상일 때에만 호출하기. 그 외에는 null 리턴.
                     val result = marbleRepository.search(it, 0)
                     isLoadingLocal.emit(false)
                     result
