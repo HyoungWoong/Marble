@@ -1,4 +1,4 @@
-package com.ho8278.marble.search
+package com.ho8278.marble.common
 
 import androidx.recyclerview.widget.DiffUtil
 import com.ho8278.data.model.Card

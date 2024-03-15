@@ -17,7 +17,7 @@ class MarbleRepositoryImpl(
     private val favoritePref: FavoritePref,
 ) : MarbleRepository {
 
-    private val favoriteChangesEvent = MutableSharedFlow<List<Int>>()
+    private val favoriteChangesEvent = MutableSharedFlow<List<Card>>()
 
     override suspend fun search(nameStartsWith: String, offset: Int): SearchResult {
         if (nameStartsWith.isEmpty()) return SearchResult(0, 0, emptyList())
@@ -41,38 +41,39 @@ class MarbleRepositoryImpl(
         return SearchResult(resultTotal, resultOffset, characters)
     }
 
-    override suspend fun getFavorites(): List<Int> {
+    override suspend fun getFavorites(): List<Card> {
         val favorites = favoritePref.getValue<Favorites>(KEY_FAVORITE, Favorites::class.java)
-        return favorites?.ids.orEmpty()
+        return favorites?.cards.orEmpty()
     }
 
-    override suspend fun setFavorite(id: Int) {
-        val favoriteIds = (getFavorites() + id).toSet()
+    override suspend fun setFavorite(card: Card) {
+        val favoriteIds = (getFavorites() + card).toSet()
 
-        val adjustedIds: List<Int> = if (favoriteIds.size > MAX_FAVORITE_COUNT) {
+        val adjustedIds: List<Card> = if (favoriteIds.size > MAX_FAVORITE_COUNT) {
             favoriteIds.toMutableList().apply {
                 removeFirst()
-                add(id)
             }
         } else {
             favoriteIds.toList()
         }
-
         val newFavorites = Favorites(adjustedIds)
 
         favoritePref.putValue(KEY_FAVORITE, newFavorites, Favorites::class.java)
-        favoriteChangesEvent.emit(newFavorites.ids)
+        favoriteChangesEvent.emit(adjustedIds)
     }
 
     override suspend fun removeFavorite(id: Int) {
-        val favoriteIds = getFavorites() - id
-        val newFavorites = Favorites(favoriteIds)
+        val removedCardList = getFavorites().toMutableList().apply {
+            val position = indexOfFirst { it.characterId == id }
+            removeAt(position)
+        }
+        val newFavorites = Favorites(removedCardList)
 
         favoritePref.putValue(KEY_FAVORITE, newFavorites, Favorites::class.java)
-        favoriteChangesEvent.emit(newFavorites.ids)
+        favoriteChangesEvent.emit(removedCardList)
     }
 
-    override fun favoriteChanges(): Flow<List<Int>> {
+    override fun favoriteChanges(): Flow<List<Card>> {
         return favoriteChangesEvent.onStart { emit(getFavorites()) }
     }
 

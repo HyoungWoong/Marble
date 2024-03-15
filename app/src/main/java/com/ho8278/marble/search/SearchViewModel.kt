@@ -3,8 +3,10 @@ package com.ho8278.marble.search
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ho8278.core.error.stable
+import com.ho8278.data.model.Card
 import com.ho8278.data.model.SearchResult
 import com.ho8278.data.repository.MarbleRepository
+import com.ho8278.marble.common.ItemHolder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -30,7 +32,7 @@ class SearchViewModel @Inject constructor(
         marbleRepository.favoriteChanges()
     ) { search, favorites ->
         search?.results?.map {
-            val isFavorite = favorites.contains(it.characterId)
+            val isFavorite = favorites.contains(it)
             ItemHolder(it, isFavorite)
         } ?: emptyList()
     }
@@ -46,6 +48,7 @@ class SearchViewModel @Inject constructor(
             searchText
                 .mapLatest {
                     isLoadingLocal.emit(true)
+                    // FIXME: searchText 가 2글자 이상일 때에만 호출하기. 그 외에는 null 리턴.
                     val result = marbleRepository.search(it, 0)
                     isLoadingLocal.emit(false)
                     result
@@ -85,16 +88,16 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    fun onSelectCard(id: Int) {
+    fun onCardClick(card: Card) {
         viewModelScope.launch {
             val currentFavorite = withContext(Dispatchers.IO) {
                 marbleRepository.getFavorites()
             }
 
-            if (currentFavorite.contains(id)) {
-                marbleRepository.removeFavorite(id)
+            if (currentFavorite.contains(card)) {
+                marbleRepository.removeFavorite(card.characterId)
             } else {
-                marbleRepository.setFavorite(id)
+                marbleRepository.setFavorite(card)
             }
         }
     }

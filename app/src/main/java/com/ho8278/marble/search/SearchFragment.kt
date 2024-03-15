@@ -6,11 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ho8278.core.error.stable
 import com.ho8278.core.flowbinding.textChanges
+import com.ho8278.marble.common.MarbleCharacterAdapter
 import com.ho8278.marble.databinding.FragmentSearchBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.debounce
@@ -23,7 +25,7 @@ class SearchFragment : Fragment() {
     private val viewModel by viewModels<SearchViewModel>()
 
     private val adapter by lazy {
-        MarbleCharacterAdapter { viewModel.onSelectCard(it.characterId) }
+        MarbleCharacterAdapter { viewModel.onCardClick(it) }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,6 +57,7 @@ class SearchFragment : Fragment() {
 
         lifecycleScope.launch {
             viewModel.itemList
+                .flowWithLifecycle(lifecycle)
                 .stable()
                 .collect { adapter.submitList(it) }
         }
@@ -80,6 +83,7 @@ class SearchFragment : Fragment() {
     private fun initProgressBar() {
         lifecycleScope.launch {
             viewModel.isLoading
+                .flowWithLifecycle(lifecycle)
                 .stable()
                 .collect {
                     binding.progress.visibility = if (it) View.VISIBLE else View.GONE
@@ -90,6 +94,7 @@ class SearchFragment : Fragment() {
     private fun initEditText() {
         lifecycleScope.launch {
             binding.editText.textChanges()
+                .flowWithLifecycle(lifecycle)
                 .debounce(300L)
                 .stable()
                 .collect { viewModel.onTextChanges(it) }
