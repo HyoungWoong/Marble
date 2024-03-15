@@ -6,12 +6,14 @@ import com.ho8278.core.error.stable
 import com.ho8278.data.model.SearchResult
 import com.ho8278.data.repository.MarbleRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -82,7 +84,15 @@ class SearchViewModel @Inject constructor(
 
     fun onSelectCard(id: Int) {
         viewModelScope.launch {
-            marbleRepository.setFavorite(id)
+            val currentFavorite = withContext(Dispatchers.IO) {
+                marbleRepository.getFavorites()
+            }
+
+            if (currentFavorite.contains(id)) {
+                marbleRepository.removeFavorite(id)
+            } else {
+                marbleRepository.setFavorite(id)
+            }
         }
     }
 
