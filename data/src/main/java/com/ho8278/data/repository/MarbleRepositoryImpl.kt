@@ -17,40 +17,54 @@ class MarbleRepositoryImpl(
     private val favoritePref: FavoritePref,
 ) : MarbleRepository {
 
-    private val favoriteChangesEvent = MutableSharedFlow<List<String>>()
+    private val favoriteChangesEvent = MutableSharedFlow<List<Int>>()
 
     override suspend fun search(nameStartsWith: String, offset: Int): SearchResult {
+        if (nameStartsWith.isEmpty()) return SearchResult(0, 0, emptyList())
+
         val timestamp = System.currentTimeMillis()
         val hash = getHash(timestamp)
         val characterResult = marbleService.getCharacters(nameStartsWith, hash, timestamp, offset)
+        val resultTotal = characterResult.data?.total ?: 0
+        val resultOffset = characterResult.data?.offset ?: 0
         val characters = characterResult.data?.results.orEmpty()
             .filter { it.id != null }
             .map {
                 Card(
                     it.id!!,
+                    it.thumbnail?.toUrl().orEmpty(),
                     it.name.orEmpty(),
                     it.description.orEmpty(),
-                    it.thumbnail?.toUrl().orEmpty()
                 )
             }
 
-        return SearchResult(characterResult.data?.total ?: 0, characters)
+        return SearchResult(resultTotal, resultOffset, characters)
     }
 
-    override suspend fun getFavorites(): List<String> {
+    override suspend fun getFavorites(): List<Int> {
         val favorites = favoritePref.getValue<Favorites>(KEY_FAVORITE, Favorites::class.java)
         return favorites?.ids.orEmpty()
     }
 
-    override suspend fun setFavorite(id: String) {
+    override suspend fun setFavorite(id: Int) {
         val favoriteIds = (getFavorites() + id).toSet()
-        val newFavorites = Favorites(favoriteIds.toList())
+
+        val adjustedIds: List<Int> = if (favoriteIds.size > MAX_FAVORITE_COUNT) {
+            favoriteIds.toMutableList().apply {
+                removeFirst()
+                add(id)
+            }
+        } else {
+            favoriteIds.toList()
+        }
+
+        val newFavorites = Favorites(adjustedIds)
 
         favoritePref.putValue(KEY_FAVORITE, newFavorites, Favorites::class.java)
         favoriteChangesEvent.emit(newFavorites.ids)
     }
 
-    override suspend fun removeFavorite(id: String) {
+    override suspend fun removeFavorite(id: Int) {
         val favoriteIds = getFavorites() - id
         val newFavorites = Favorites(favoriteIds)
 
@@ -58,7 +72,7 @@ class MarbleRepositoryImpl(
         favoriteChangesEvent.emit(newFavorites.ids)
     }
 
-    override fun favoriteChanges(): Flow<List<String>> {
+    override fun favoriteChanges(): Flow<List<Int>> {
         return favoriteChangesEvent.onStart { emit(getFavorites()) }
     }
 
@@ -71,5 +85,6 @@ class MarbleRepositoryImpl(
 
     companion object {
         private const val KEY_FAVORITE = "key_favorite"
+        private const val MAX_FAVORITE_COUNT = 5
     }
 }

@@ -53,29 +53,29 @@ class RepositoryTest {
 
     @Test
     fun `현재 저장된 favorite 을 저장하고 가져올 수 있다`(): Unit = runBlocking {
-        repository.setFavorite("1")
-        repository.setFavorite("3")
-        repository.setFavorite("5")
-        repository.setFavorite("6")
-        repository.setFavorite("6")
+        repository.setFavorite(1)
+        repository.setFavorite(3)
+        repository.setFavorite(5)
+        repository.setFavorite(6)
+        repository.setFavorite(6)
 
         val favoriteIds = repository.getFavorites()
 
-        assert(favoriteIds == listOf("1", "3", "5", "6"))
+        assert(favoriteIds == listOf(1, 3, 5, 6))
     }
 
     @Test
     fun `현재 저장된 favorite 을 삭제할 수 있다`(): Unit = runBlocking {
-        repository.setFavorite("1")
-        repository.setFavorite("3")
-        repository.setFavorite("5")
-        repository.setFavorite("6")
-        repository.setFavorite("6")
+        repository.setFavorite(1)
+        repository.setFavorite(3)
+        repository.setFavorite(5)
+        repository.setFavorite(6)
+        repository.setFavorite(6)
 
-        repository.removeFavorite("1")
+        repository.removeFavorite(1)
 
         val favoriteIds = repository.getFavorites()
 
-        assert(favoriteIds == listOf("3", "5", "6"))
+        assert(favoriteIds == listOf(3, 5, 6))
     }
 }
