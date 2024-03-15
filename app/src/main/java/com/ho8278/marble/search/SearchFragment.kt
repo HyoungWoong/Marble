@@ -58,6 +58,14 @@ class SearchFragment : Fragment() {
                 .stable()
                 .collect { adapter.submitList(it) }
         }
+
+        lifecycleScope.launch {
+            viewModel.isLoading
+                .stable()
+                .collect {
+                    binding.progress.visibility = if (it) View.VISIBLE else View.GONE
+                }
+        }
     }
 
     companion object {
