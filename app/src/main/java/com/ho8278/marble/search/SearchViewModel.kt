@@ -86,7 +86,7 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    fun onSelectCard(id: Int) {
+    fun onCardClick(id: Int) {
         viewModelScope.launch {
             val currentFavorite = withContext(Dispatchers.IO) {
                 marbleRepository.getFavorites()

@@ -24,7 +24,7 @@ class SearchFragment : Fragment() {
     private val viewModel by viewModels<SearchViewModel>()
 
     private val adapter by lazy {
-        MarbleCharacterAdapter { viewModel.onSelectCard(it.characterId) }
+        MarbleCharacterAdapter { viewModel.onCardClick(it.characterId) }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
