@@ -44,8 +44,20 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initRecyclerView()
+        initProgressBar()
+        initEditText()
+    }
+
+    private fun initRecyclerView() {
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.recyclerView.adapter = adapter
+
+        lifecycleScope.launch {
+            viewModel.itemList
+                .stable()
+                .collect { adapter.submitList(it) }
+        }
 
         binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -63,26 +75,24 @@ class SearchFragment : Fragment() {
                 }
             }
         })
+    }
 
-        lifecycleScope.launch {
-            binding.editText.textChanges()
-                .debounce(300L)
-                .stable()
-                .collect { viewModel.onTextChanges(it) }
-        }
-
-        lifecycleScope.launch {
-            viewModel.itemList
-                .stable()
-                .collect { adapter.submitList(it) }
-        }
-
+    private fun initProgressBar() {
         lifecycleScope.launch {
             viewModel.isLoading
                 .stable()
                 .collect {
                     binding.progress.visibility = if (it) View.VISIBLE else View.GONE
                 }
+        }
+    }
+
+    private fun initEditText() {
+        lifecycleScope.launch {
+            binding.editText.textChanges()
+                .debounce(300L)
+                .stable()
+                .collect { viewModel.onTextChanges(it) }
         }
     }
 
