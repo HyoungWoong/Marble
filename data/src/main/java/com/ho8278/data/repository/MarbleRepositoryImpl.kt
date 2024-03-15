@@ -20,6 +20,8 @@ class MarbleRepositoryImpl(
     private val favoriteChangesEvent = MutableSharedFlow<List<Int>>()
 
     override suspend fun search(nameStartsWith: String, offset: Int): SearchResult {
+        if (nameStartsWith.isEmpty()) throw IllegalArgumentException("query is empty string.")
+
         val timestamp = System.currentTimeMillis()
         val hash = getHash(timestamp)
         val characterResult = marbleService.getCharacters(nameStartsWith, hash, timestamp, offset)
@@ -30,9 +32,9 @@ class MarbleRepositoryImpl(
             .map {
                 Card(
                     it.id!!,
+                    it.thumbnail?.toUrl().orEmpty(),
                     it.name.orEmpty(),
                     it.description.orEmpty(),
-                    it.thumbnail?.toUrl().orEmpty()
                 )
             }
 
