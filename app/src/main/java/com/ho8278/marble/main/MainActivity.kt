@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
                             val fragment = if (position == 0) {
                                 SearchFragment.newInstance()
                             } else {
-                                FavoriteFragment.newInstance("", "")
+                                FavoriteFragment.newInstance()
                             }
                             add(R.id.fragment, fragment, tag)
                         }
