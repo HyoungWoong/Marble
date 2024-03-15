@@ -7,6 +7,7 @@ import com.ho8278.data.repository.MarbleRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,6 +21,15 @@ class SearchViewModel @Inject constructor(
 
     private val searchResult = MutableStateFlow<SearchResult?>(null)
     val searchText = MutableStateFlow("")
+
+    val itemList: Flow<List<ItemHolder>> = searchResult.combine(
+        marbleRepository.favoriteChanges()
+    ) { search, favorites ->
+        search?.results?.map {
+            val isFavorite = favorites.contains(it.characterId)
+            ItemHolder(it, isFavorite)
+        } ?: emptyList()
+    }
 
     fun init() {
         if (isInitialize) return
