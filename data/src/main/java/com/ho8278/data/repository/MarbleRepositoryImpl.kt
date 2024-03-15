@@ -48,7 +48,17 @@ class MarbleRepositoryImpl(
 
     override suspend fun setFavorite(id: Int) {
         val favoriteIds = (getFavorites() + id).toSet()
-        val newFavorites = Favorites(favoriteIds.toList())
+
+        val adjustedIds: List<Int> = if (favoriteIds.size > MAX_FAVORITE_COUNT) {
+            favoriteIds.toMutableList().apply {
+                removeFirst()
+                add(id)
+            }
+        } else {
+            favoriteIds.toList()
+        }
+
+        val newFavorites = Favorites(adjustedIds)
 
         favoritePref.putValue(KEY_FAVORITE, newFavorites, Favorites::class.java)
         favoriteChangesEvent.emit(newFavorites.ids)
@@ -75,5 +85,6 @@ class MarbleRepositoryImpl(
 
     companion object {
         private const val KEY_FAVORITE = "key_favorite"
+        private const val MAX_FAVORITE_COUNT = 5
     }
 }
