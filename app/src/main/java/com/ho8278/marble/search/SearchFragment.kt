@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ho8278.core.error.stable
 import com.ho8278.core.flowbinding.textChanges
+import com.ho8278.marble.common.MarbleCharacterAdapter
 import com.ho8278.marble.databinding.FragmentSearchBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.debounce

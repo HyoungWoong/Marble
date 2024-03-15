@@ -1,4 +1,4 @@
-package com.ho8278.marble.search
+package com.ho8278.marble.common
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.ho8278.core.error.stable
 import com.ho8278.data.model.SearchResult
 import com.ho8278.data.repository.MarbleRepository
+import com.ho8278.marble.common.ItemHolder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
