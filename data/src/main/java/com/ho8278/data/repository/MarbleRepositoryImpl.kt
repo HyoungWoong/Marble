@@ -20,7 +20,7 @@ class MarbleRepositoryImpl(
     private val favoriteChangesEvent = MutableSharedFlow<List<Int>>()
 
     override suspend fun search(nameStartsWith: String, offset: Int): SearchResult {
-        if (nameStartsWith.isEmpty()) throw IllegalArgumentException("query is empty string.")
+        if (nameStartsWith.isEmpty()) return SearchResult(0, 0, emptyList())
 
         val timestamp = System.currentTimeMillis()
         val hash = getHash(timestamp)
