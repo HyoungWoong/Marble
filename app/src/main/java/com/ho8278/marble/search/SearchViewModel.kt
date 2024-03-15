@@ -6,7 +6,9 @@ import com.ho8278.data.model.SearchResult
 import com.ho8278.data.repository.MarbleRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.launch
@@ -31,13 +33,21 @@ class SearchViewModel @Inject constructor(
         } ?: emptyList()
     }
 
+    private val isLoadingLocal = MutableSharedFlow<Boolean>()
+    val isLoading: SharedFlow<Boolean> = isLoadingLocal
+
     fun init() {
         if (isInitialize) return
         isInitialize = true
 
         viewModelScope.launch {
             searchText
-                .mapLatest { marbleRepository.search(it, 0) }
+                .mapLatest {
+                    isLoadingLocal.emit(true)
+                    val result = marbleRepository.search(it, 0)
+                    isLoadingLocal.emit(false)
+                    result
+                }
                 .collect { searchResult.emit(it) }
         }
     }
