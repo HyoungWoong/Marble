@@ -2,16 +2,26 @@ package com.ho8278.marble.search
 
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.ho8278.core.error.stable
+import com.ho8278.core.flowbinding.clicks
 import com.ho8278.data.model.Card
 import com.ho8278.marble.databinding.ItemCharacterBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class CharacterViewHolder(
     private val binding: ItemCharacterBinding,
     private val onItemClick: (card: Card) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
     fun onBind(itemHolder: ItemHolder) {
-        binding.root.setOnClickListener {
-            onItemClick(itemHolder.card)
+        CoroutineScope(Dispatchers.Main.immediate).launch {
+            binding.root.clicks()
+                .stable()
+                .collect{
+                    onItemClick(itemHolder.card)
+                }
         }
 
         Glide.with(binding.thumbnail)
