@@ -2,13 +2,13 @@ package com.ho8278.marble.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ho8278.core.error.stable
 import com.ho8278.data.model.SearchResult
 import com.ho8278.data.repository.MarbleRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.mapLatest
@@ -50,10 +50,7 @@ class SearchViewModel @Inject constructor(
                     isLoadingLocal.emit(false)
                     result
                 }
-                .catch {
-                    it.printStackTrace()
-                    emit(null)
-                }
+                .stable()
                 .collect { searchResult.emit(it) }
         }
     }

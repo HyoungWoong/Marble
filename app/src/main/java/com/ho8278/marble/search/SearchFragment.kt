@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import com.ho8278.core.error.stable
 import com.ho8278.core.flowbinding.textChanges
 import com.ho8278.marble.databinding.FragmentSearchBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -48,11 +49,13 @@ class SearchFragment : Fragment() {
         lifecycleScope.launch {
             binding.editText.textChanges()
                 .debounce(300L)
+                .stable()
                 .collect { viewModel.onTextChanges(it) }
         }
 
         lifecycleScope.launch {
             viewModel.itemList
+                .stable()
                 .collect { adapter.submitList(it) }
         }
     }
