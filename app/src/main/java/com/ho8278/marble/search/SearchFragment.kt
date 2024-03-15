@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.ho8278.core.error.stable
 import com.ho8278.core.flowbinding.textChanges
 import com.ho8278.marble.databinding.FragmentSearchBinding
@@ -45,6 +46,23 @@ class SearchFragment : Fragment() {
 
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.recyclerView.adapter = adapter
+
+        binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    if (recyclerView.layoutManager !is GridLayoutManager) return
+
+                    val lastVisiblePosition =
+                        (recyclerView.layoutManager as GridLayoutManager).findLastVisibleItemPosition()
+
+                    val isLast = (recyclerView.adapter?.itemCount?.minus(1)) == lastVisiblePosition
+
+                    if (isLast) {
+                        viewModel.loadMore()
+                    }
+                }
+            }
+        })
 
         lifecycleScope.launch {
             binding.editText.textChanges()

@@ -63,7 +63,10 @@ class SearchViewModel @Inject constructor(
 
     fun loadMore() {
         viewModelScope.launch {
-            if (searchResult.value == null || searchText.value.isEmpty() || isLoadingLocal.value) {
+            if (searchResult.value == null) return@launch
+
+            val isLoadAll = searchResult.value!!.total <= searchResult.value!!.offset + OFFSET_COUNT
+            if (searchText.value.isEmpty() || isLoadingLocal.value || isLoadAll) {
                 return@launch
             }
 
