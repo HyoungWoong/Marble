@@ -23,6 +23,8 @@ class MarbleRepositoryImpl(
         val timestamp = System.currentTimeMillis()
         val hash = getHash(timestamp)
         val characterResult = marbleService.getCharacters(nameStartsWith, hash, timestamp, offset)
+        val total = characterResult.data?.total ?: 0
+        val offset = characterResult.data?.offset ?: 0
         val characters = characterResult.data?.results.orEmpty()
             .filter { it.id != null }
             .map {
@@ -34,7 +36,7 @@ class MarbleRepositoryImpl(
                 )
             }
 
-        return SearchResult(characterResult.data?.total ?: 0, characters)
+        return SearchResult(total, offset, characters)
     }
 
     override suspend fun getFavorites(): List<Int> {
