@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -46,9 +47,9 @@ class SearchViewModel @Inject constructor(
 
         viewModelScope.launch {
             searchText
+                .filter { it.length >= 2 }
                 .mapLatest {
                     isLoadingLocal.emit(true)
-                    // FIXME: searchText 가 2글자 이상일 때에만 호출하기. 그 외에는 null 리턴.
                     val result = marbleRepository.search(it, 0)
                     isLoadingLocal.emit(false)
                     result
