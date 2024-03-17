@@ -17,7 +17,11 @@ class CachePreference(
     override suspend fun <T : Any> getValue(domainName: String, key: String, type: Type): T? {
         return mutex.withLock {
             valueCache[getCacheKey(domainName, key)] as? T
-                ?: delegate.getValue(domainName, key, type)
+                ?: run {
+                    val delegateValue = delegate.getValue<T>(domainName, key, type)
+                    valueCache.put(getCacheKey(domainName, key), delegateValue)
+                    delegateValue
+                }
         }
     }
 
